@@ -114,13 +114,15 @@ func (n *StatusNode) Start(config *params.NodeConfig, services ...node.ServiceCo
 		return err
 	}
 
-	if n.config.Discovery {
-		return n.startPeerPool()
-	}
 	if n.config.WhisperConfig != nil && n.config.WhisperConfig.Enabled {
-		return n.setupWhisperTimeSource()
+		if err := n.setupWhisperTimeSource(); err != nil {
+			return err
+		}
 	}
-	return nil
+	if n.config.NoDiscovery {
+		return nil
+	}
+	return n.startPeerPool()
 }
 
 func (n *StatusNode) setupDeduplicator() error {
@@ -248,7 +250,7 @@ func (n *StatusNode) stop() error {
 }
 
 func (n *StatusNode) stopPeerPool() error {
-	if !n.config.Discovery {
+	if n.config.NoDiscovery {
 		return nil
 	}
 
