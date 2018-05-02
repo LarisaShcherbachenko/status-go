@@ -65,6 +65,9 @@ func BenchmarkDeduplicate30000MessagesADay(b *testing.B) {
 		messages := messagesOld[start:(start + length)]
 		start += length
 		d.Deduplicate(messages)
+		for _, msg := range messages {
+			d.AddMessage(msg)
+		}
 	}
 }
 
@@ -99,12 +102,19 @@ func (s *DeduplicatorTestSuite) TestDeduplicateSingleFilter() {
 
 	result := s.d.Deduplicate(messages1)
 	s.Equal(len(messages1), len(result))
+	for _, msg := range messages1 {
+		s.d.AddMessage(msg)
+	}
 
 	result = s.d.Deduplicate(messages1)
 	s.Equal(0, len(result))
 
 	result = s.d.Deduplicate(messages2)
 	s.Equal(len(messages2), len(result))
+
+	for _, msg := range messages2 {
+		s.d.AddMessage(msg)
+	}
 
 	messages3 := append(messages2, generateMessages(11)...)
 
@@ -118,6 +128,10 @@ func (s *DeduplicatorTestSuite) TestDeduplicateMultipleFilters() {
 	s.d.keyPairProvider = dummyKeyPairProvider{"acc1"}
 	result := s.d.Deduplicate(messages1)
 	s.Equal(len(messages1), len(result))
+
+	for _, msg := range messages1 {
+		s.d.AddMessage(msg)
+	}
 
 	result = s.d.Deduplicate(messages1)
 	s.Equal(0, len(result))
