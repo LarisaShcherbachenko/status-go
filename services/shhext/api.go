@@ -130,6 +130,10 @@ func (api *PublicAPI) GetNewFilterMessages(filterID string) ([]*whisper.Message,
 	return api.service.Deduplicator.Deduplicate(msgs), err
 }
 
+func (api *PublicAPI) ConfirmMessageProcessed(message *whisper.Message) error {
+	return api.service.Deduplicator.AddMessage(message)
+}
+
 // -----
 // HELPER
 // -----
