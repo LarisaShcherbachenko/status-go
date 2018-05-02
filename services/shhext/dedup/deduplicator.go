@@ -51,16 +51,6 @@ func (d *Deduplicator) Deduplicate(messages []*whisper.Message) []*whisper.Messa
 		}
 	}
 
-	/*
-		// Put all the messages there, for simplicity.
-		// That way, we will always have repeating messages in the current day.
-		// Performance implications seem negligible on 30000 messages/day
-		err := d.cache.Put(d.keyPairProvider.SelectedKeyPairID(), messages)
-		if err != nil {
-			d.log.Error("error while deduplicating messages: cache update failed", "err", err)
-		}
-	*/
-
 	return result
 }
 
