@@ -39,9 +39,7 @@ func (s *DedupCacheTestSuite) TestMultipleFilterIDs() {
 	filterID2 := "filter-id2"
 	filterID3 := "filter-id"
 	messagesFilter1 := generateMessages(10)
-	for _, msg := range messagesFilter1 {
-		s.NoError(s.c.Put(filterID1, msg))
-	}
+	s.NoError(s.c.Put(filterID1, messagesFilter1))
 
 	for _, msg := range messagesFilter1 {
 		has, err := s.c.Has(filterID1, msg)
@@ -58,9 +56,7 @@ func (s *DedupCacheTestSuite) TestMultipleFilterIDs() {
 	}
 
 	messagesFilter2 := generateMessages(10)
-	for _, msg := range messagesFilter2 {
-		s.NoError(s.c.Put(filterID2, msg))
-	}
+	s.NoError(s.c.Put(filterID2, messagesFilter2))
 
 	for _, msg := range messagesFilter2 {
 		has, err := s.c.Has(filterID1, msg)
@@ -82,10 +78,7 @@ func (s *DedupCacheTestSuite) TestCleaningUp() {
 	// - 2 days
 	s.c.now = func() time.Time { return time.Now().Add(-48 * time.Hour) }
 	messages2DaysOld := generateMessages(10)
-
-	for _, msg := range messages2DaysOld {
-		s.NoError(s.c.Put(filterID, msg))
-	}
+	s.NoError(s.c.Put(filterID, messages2DaysOld))
 
 	for _, msg := range messages2DaysOld {
 		has, err := s.c.Has(filterID, msg)
@@ -96,10 +89,7 @@ func (s *DedupCacheTestSuite) TestCleaningUp() {
 	// - 1 days
 	s.c.now = func() time.Time { return time.Now().Add(-24 * time.Hour) }
 	messages1DayOld := generateMessages(10)
-
-	for _, msg := range messages1DayOld {
-		s.NoError(s.c.Put(filterID, msg))
-	}
+	s.NoError(s.c.Put(filterID, messages1DayOld))
 
 	for _, msg := range messages2DaysOld {
 		has, err := s.c.Has(filterID, msg)
@@ -116,9 +106,7 @@ func (s *DedupCacheTestSuite) TestCleaningUp() {
 	// now
 	s.c.now = time.Now
 	messagesToday := generateMessages(10)
-	for _, msg := range messagesToday {
-		s.NoError(s.c.Put(filterID, msg))
-	}
+	s.NoError(s.c.Put(filterID, messagesToday))
 
 	for _, msg := range messages2DaysOld {
 		has, err := s.c.Has(filterID, msg)

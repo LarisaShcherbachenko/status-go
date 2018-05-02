@@ -34,9 +34,12 @@ func (d *cache) Has(filterID string, message *whisper.Message) (bool, error) {
 	return d.db.Has(d.keyYesterday(filterID, message), nil)
 }
 
-func (d *cache) Put(filterID string, msg *whisper.Message) error {
+func (d *cache) Put(filterID string, messages []*whisper.Message) error {
 	batch := leveldb.Batch{}
-	batch.Put(d.keyToday(filterID, msg), []byte{})
+
+	for _, msg := range messages {
+		batch.Put(d.keyToday(filterID, msg), []byte{})
+	}
 
 	err := d.db.Write(&batch, nil)
 	if err != nil {

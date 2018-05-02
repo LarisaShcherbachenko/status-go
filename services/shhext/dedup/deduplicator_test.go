@@ -66,9 +66,7 @@ func BenchmarkDeduplicate30000MessagesADay(b *testing.B) {
 		messages := messagesOld[start:(start + length)]
 		start += length
 		d.Deduplicate(messages)
-		for _, msg := range messages {
-			assert.NoError(b, d.AddMessage(msg))
-		}
+		assert.NoError(b, d.AddMessages(messages))
 	}
 }
 
@@ -103,19 +101,14 @@ func (s *DeduplicatorTestSuite) TestDeduplicateSingleFilter() {
 
 	result := s.d.Deduplicate(messages1)
 	s.Equal(len(messages1), len(result))
-	for _, msg := range messages1 {
-		s.NoError(s.d.AddMessage(msg))
-	}
+	s.NoError(s.d.AddMessages(messages1))
 
 	result = s.d.Deduplicate(messages1)
 	s.Equal(0, len(result))
 
 	result = s.d.Deduplicate(messages2)
 	s.Equal(len(messages2), len(result))
-
-	for _, msg := range messages2 {
-		s.NoError(s.d.AddMessage(msg))
-	}
+	s.NoError(s.d.AddMessages(messages2))
 
 	messages3 := append(messages2, generateMessages(11)...)
 
@@ -130,9 +123,7 @@ func (s *DeduplicatorTestSuite) TestDeduplicateMultipleFilters() {
 	result := s.d.Deduplicate(messages1)
 	s.Equal(len(messages1), len(result))
 
-	for _, msg := range messages1 {
-		s.NoError(s.d.AddMessage(msg))
-	}
+	s.NoError(s.d.AddMessages(messages1))
 
 	result = s.d.Deduplicate(messages1)
 	s.Equal(0, len(result))
