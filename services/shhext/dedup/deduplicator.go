@@ -64,6 +64,8 @@ func (d *Deduplicator) Deduplicate(messages []*whisper.Message) []*whisper.Messa
 	return result
 }
 
+// AddMessage adds a message to the deduplicator DB, so it will be filtered
+// out.
 func (d *Deduplicator) AddMessage(message *whisper.Message) error {
 	return d.cache.Put(d.keyPairProvider.SelectedKeyPairID(), message)
 }
